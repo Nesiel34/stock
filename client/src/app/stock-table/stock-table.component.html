@@ -11,16 +11,21 @@
           <ng-container matColumnDef="{{column.key}}">
             <th mat-header-cell *matHeaderCellDef class="text-start"> {{column.title}} </th>
             <td mat-cell *matCellDef="let element" class="text-start">
-           @if(column.key == 'lastUpdateTime'){
-               {{element[column.key] | date:'dd/MM/yyyy HH:mm:ss'}}
+              @if(column.isNumber){
+                {{element[column.key] | number:'1.0-0'}}
               }
-              @else if(column.key == 'diff'){
-                <span dir="ltr" [class]="element['diffChange']">
-                  {{element[column.key]/100|percent:'1.2-2'}}
-                </span>
-              }
-              @else{
-                {{element[column.key]}}
+              @else {
+                @if(column.key == 'lastUpdateTime'){
+                  {{element[column.key] | date:'dd/MM/yyyy HH:mm:ss'}}
+                 }
+                 @else if(column.key == 'diff'){
+                   <span dir="ltr" [class]="element['diffChange']">
+                     {{element[column.key]/100|percent:'1.2-2'}}
+                   </span>
+                 }
+                 @else{
+                   {{element[column.key]}}
+                 }
               }
             </td>
           </ng-container>

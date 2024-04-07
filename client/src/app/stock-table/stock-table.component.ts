@@ -2,7 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import {MatTableDataSource, MatTableModule} from '@angular/material/table';
 import { DiffChange, IStock } from '../../shared/interface/IStock.interface';
 import { ITableColumns } from '../../shared/interface/ITableColumns.interface';
-import { DatePipe, PercentPipe } from '@angular/common';
+import { DatePipe, DecimalPipe, PercentPipe } from '@angular/common';
 import * as XLSX from 'xlsx';
 import {MatIconButton } from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
@@ -15,7 +15,7 @@ import { ApiService } from '../api.service';
 @Component({
   selector: 'app-stock-table',
   standalone: true,
-  imports: [MatTableModule,PercentPipe,MatIconModule,MatIconButton,MatTooltipModule,DatePipe],
+  imports: [MatTableModule,PercentPipe,MatIconModule,MatIconButton,MatTooltipModule,DatePipe,DecimalPipe],
   templateUrl: './stock-table.component.html',
   styleUrl: './stock-table.component.scss'
 })
@@ -27,14 +27,14 @@ export class StockTableComponent implements OnInit{
   tableColumns: ITableColumns[]=[//the columns of the table
     {key: 'stockId', title: 'מספר נייר'},
     {key: 'stockName', title: 'שם נייר'},
-    {key: 'basePrice', title: 'מחיר בסיס'},
-    {key: 'bidQty', title: 'כמות היצע'},
-    {key: 'bidPrice', title: 'מחיר היצע'},
-    {key: 'bidTotal', title: 'סה"כ היצע'},
-    {key: 'askQty', title: 'כמות ביקוש'},
-    {key: 'askPrice', title: 'מחיר ביקוש'},
-    {key: 'askTotal', title: 'סה"כ ביקוש'},
-    {key: 'lastPrice', title: 'מחיר אחרון'},
+    {key: 'basePrice', title: 'מחיר בסיס',isNumber:true},
+    {key: 'bidQty', title: 'כמות היצע',isNumber:true},
+    {key: 'bidPrice', title: 'מחיר היצע',isNumber:true},
+    {key: 'bidTotal', title: 'סה"כ היצע',isNumber:true},
+    {key: 'askQty', title: 'כמות ביקוש',isNumber:true},
+    {key: 'askPrice', title: 'מחיר ביקוש',isNumber:true},
+    {key: 'askTotal', title: 'סה"כ ביקוש',isNumber:true},
+    {key: 'lastPrice', title: 'מחיר אחרון',isNumber:true},
     {key: 'diff', title: 'שינוי באחוזים'},
     {key: 'lastUpdateTime', title: 'שעת עדכון'}
   ];
@@ -113,7 +113,7 @@ export class StockTableComponent implements OnInit{
       ...stock,
       bidTotal: stock.bidPrice * stock.bidQty,
       askTotal: stock.askPrice * stock.askQty,
-      diff: ((stock.lastPrice - stock.basePrice) / stock.basePrice) * 100,
+      diff: ((stock.lastPrice / stock.basePrice) -1)* 100,
       diffChange: this.checkDiffChange(stock)
     }
   }
